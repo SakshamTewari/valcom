@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setMyLocation } from '../MapPage/mapSlice';
 import { getFakeLocation } from './FAKE_LOCATIONS';
+import { connectWithSocketIOServer } from '../../socketConnection/socketConn';
+import { proceedWithLogin } from '../../app/actions/loginPageActions';
 import './Login.css';
 import LoginButton from './LoginButton';
 import { LoginInput } from './LoginInput';
@@ -22,10 +24,20 @@ const locationsOptions = {
 export const Login = () => {
   const [username, setUsername] = useState('');
   const [locationErrorOccurred, setLocationErrorOccurred] = useState(false);
+
+  const myLocation = useSelector((state) => state.map.myLocation);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = () => {
+    proceedWithLogin({
+      username,
+      coords: {
+        lng: myLocation.lng,
+        lat: myLocation.lat,
+      },
+    });
     navigate('/map');
   };
 
@@ -57,6 +69,10 @@ export const Login = () => {
     // Remove this when in production
     onSuccess(getFakeLocation());
   }, []);
+
+  useEffect(() => {
+    connectWithSocketIOServer();
+  }, [myLocation]);
 
   return (
     <div className='l_page_container'>
