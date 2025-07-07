@@ -1,4 +1,5 @@
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+import { convertOnlineUsersToArray } from '../utils/user.utils';
 
 interface User {
   username: string;
@@ -21,11 +22,18 @@ const removeOnlineUser = (socketId: string) => {
   console.log(onlineUsers);
 };
 
-export const loginEventHandler = (socket: Socket, data: User) => {
+export const loginEventHandler = (io: Server, socket: Socket, data: User) => {
+  socket.join('logged-users');
+
   onlineUsers[socket.id] = {
     username: data.username,
     coords: data.coords,
   };
   console.log(`User logged in: ${data.username}`, onlineUsers);
   console.log('Online users: ', onlineUsers);
+
+  io.to('logged-users').emit(
+    'online-users',
+    convertOnlineUsersToArray(onlineUsers),
+  );
 };

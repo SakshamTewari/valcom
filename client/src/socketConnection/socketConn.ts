@@ -7,6 +7,10 @@ export const connectWithSocketIOServer = () => {
   socket.on('connect', () => {
     console.log('Socket Client connected to socket server');
   });
+
+  socket.on('online-users', (onlineUsers) => {
+    console.log(onlineUsers);
+  });
 };
 
 export const login = (data) => {
