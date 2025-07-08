@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { onlineUsersHandler } from '../app/actions/userActions';
 
 let socket = null;
 export const connectWithSocketIOServer = () => {
@@ -9,7 +10,8 @@ export const connectWithSocketIOServer = () => {
   });
 
   socket.on('online-users', (onlineUsers) => {
-    console.log(onlineUsers);
+    // console.log(onlineUsers);
+    onlineUsersHandler(socket.id, onlineUsers);
   });
 };
 
