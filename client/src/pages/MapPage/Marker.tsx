@@ -9,6 +9,7 @@ const Marker = (props) => {
         alt={username}
         className='mao_page_marker_img'
       />
+      <p className='mao_page_marker_text'>{myself ? 'Me' : username}</p>
     </div>
   );
 };
